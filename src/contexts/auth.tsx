@@ -47,16 +47,16 @@ export function AuthProvider(props: AuthProvider) {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('@dowhile:token');
+    const token = localStorage.getItem("@dowhile:token");
 
-    if(token) {
-        api.defaults.headers.common.authorization = `Bearer ${token}`
+    if (token) {
+      api.defaults.headers.common.authorization = `Bearer ${token}`;
 
-        api.get<User>('profile').then(response => {
-            setUser(response.data)
-        })
+      api.get<User>("profile").then((response) => {
+        setUser(response.data);
+      });
     }
-  },[])
+  }, []);
 
   const signIn = async (githubCode: string) => {
     const response = await api.post<AuthResponse>("authenticate", {
@@ -67,13 +67,15 @@ export function AuthProvider(props: AuthProvider) {
 
     localStorage.setItem("@dowhile:token", token);
 
+    api.defaults.headers.common.authorization = `Bearer ${token}`;
+
     setUser(user);
   };
 
   const signOut = () => {
-      setUser(null);
-      localStorage.removeItem('@dowhile:token')
-  }
+    setUser(null);
+    localStorage.removeItem("@dowhile:token");
+  };
 
   return (
     <AuthContext.Provider value={{ signInUrl, user, signOut }}>
